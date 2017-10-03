@@ -4,7 +4,7 @@
 \alias{predictEnsemble}
 \title{Predict using an ensemble classifier}
 \usage{
-predictEnsemble(ensemble, test_data)
+predictEnsemble(ensemble, test_data, ...)
 }
 \arguments{
 \item{ensemble}{An ensemble classifier built with \code{buildWeightedEnsemble}}
