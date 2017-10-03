@@ -6,7 +6,7 @@
 #'
 #'@return Predictions for the provided data
 #'@export
-predictEnsemble <- function(ensemble, test_data){
+predictEnsemble <- function(ensemble, test_data, ...){
 
   n <- nrow(test_data)                                        # how many predictions to make
   K <- length(levels(ensemble$trainPreds$true_class))        # the number of classes
@@ -25,6 +25,8 @@ predictEnsemble <- function(ensemble, test_data){
                                  ensemble$nbins, ensemble$trainPreds,
                                  test_data, M, K)
     if(ensemble$weightType == "bin dictator") modelWeights <- bin_dictator_weighted(modelWeights)
+  }else if(ensemble$weightType == "knn"){
+    modelWeights <- knn_weighted(train_data=ensemble$trainPreds, test_data=test_data, M=M, scale=TRUE, knn_size=ensemble$knn_size)
   }else{
     print("Provide a valid weightType")
     return(NULL)

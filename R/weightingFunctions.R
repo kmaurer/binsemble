@@ -66,7 +66,7 @@ make_model_metric_array_majvote <- function(test_preds){
 #' @param model_storage_list A list holding models from RWeka
 #' @param test_data A data frame holding data on which to test
 #' @param true_classes An array holding the order of the true labels CANDIDATE FOR REPLACEMENT
-#' 
+#'
 #' @return \code{model_metric}
 #' @examples
 #'
@@ -97,7 +97,7 @@ make_model_metric_array <- function(combination_rule, model_storage_list, test_d
 #'
 #' @param train_data Training data with predicted class columns from each model \code{1,...,M}
 #' @param n The number of instances in the test data
-#' 
+#'
 #' @return matris of weights
 #' @export
 weighted <- function(train_data, M, n){
@@ -122,9 +122,9 @@ weighted <- function(train_data, M, n){
 #' @param test_data data frame containing test data. Must have same column names as training data
 #' @param M number of models in bin weighted ensemble
 #' @param K number of true classes
-#' 
+#'
 #' @return matrix of bin weights
-#' 
+#'
 #' @export
 bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_data, M, K){
   ## Start with creating bin definitions based on "training data" then bin "test data" with that definition
@@ -151,7 +151,7 @@ bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_d
       bin_accuracy_array[m,as.numeric(as.character(b))] <- sum(train_data_preds$true_class[inBin]==train_data_preds[,paste("preds",m,sep="")][inBin])/length(inBin)
     }
   }
-  
+
   ## set weights for test data observations based on the training accuracies of the bin they belong to
   n=nrow(test_data)
   model_weights <- array(NA,c(n,M))
@@ -167,9 +167,9 @@ bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_d
 #' Establish bin dictator weights
 #'
 #' @description Take bin weights from bin_weights function and set all but best model weight in each bin to zero
-#' 
+#'
 #' @param bin_model_weights nXM matrix of weights from the bin_weighted function
-#' 
+#'
 #' @return matrix of bin-dictator weights
 #' @export
 bin_dictator_weighted <- function(bin_model_weights){
@@ -181,7 +181,37 @@ bin_dictator_weighted <- function(bin_model_weights){
 
 
 
-
+#' Model weights for "weight_type == "knn"
+#'
+#' @description Calculate the model weights using k-nearest neighbor accuracy weights when "weight_type" == "knn"
+#'
+#' @param train_data Training data with predicted class columns from each model \code{1,...,M}
+#' @param n The number of instances in the test data
+#' @param scale TRUE/FALSE for rescaling data (default: scale=TRUE)
+#' @param neighbors number of neighbors used in accuracy estimates for each model
+#'
+#' @return matris of weights nrow=number of test points, rcol=M=number of models
+#' @export
+knn_weighted <- function(train_data, test_data, M, scale=TRUE,knn_size=10){
+  feature_names <- names(test_data)[names(test_data)!="true_class"]
+  if(scale==TRUE){
+    # standardize training data
+    train_x <- scale(train_data[,feature_names])
+    # standardize test data based training center/scales
+    test_x <- scale(test_data[,feature_names],center=attributes(train_x)$'scaled:center',scale=attributes(train_x)$'scaled:scale')
+  } else {
+    train_x <- train_data[,feature_names]
+    test_x <- test_data[,feature_names]
+  }
+  # find knn of each test point
+  knn_idx <- FNN::get.knnx(data = train_x, query = test_x, k = knn_size, algorithm = "brute")
+  # find accuracy of predictions from each model on k nearest neighborhood
+  model_weights <- array(NA,c(nrow(test_data),M))
+  for(i in 1:nrow(test_data)){
+      model_weights[i,] <- sapply(paste("preds",1:M,sep=""), function(x) sum(train_data$true_class[knn_idx$nn.index[i,]]==train_data[knn_idx$nn.index[i,],x])/knn_size )
+  }
+  return(model_weights)
+}
 
 
 
