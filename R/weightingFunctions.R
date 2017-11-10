@@ -127,6 +127,15 @@ weighted <- function(train_data, M, n){
 #'
 #' @export
 bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_data, M, K){
+  #!# add rotation option here
+  # if(rotate==TRUE){
+  #   pca(train_data_preds)
+  #   training_data_preds <- rotate(training_data_preds)
+  #   test_data <- rotate(test_data)
+  #   rename(train_data_preds)<- c(pc1, pc2,...etc)
+  #   rename(test_data)<- c(pc1, pc2,...etc)
+  #   bin_features <- pc1, pc2,...etc
+  # }
   ## Start with creating bin definitions based on "training data" then bin "test data" with that definition
   if(bin_type %in% c("standard","quantile")){
     bin_train <- bin_nd(data=train_data_preds, bin_features=bin_features, nbins=nbins, bin_type=bin_type, output="both")

@@ -38,6 +38,7 @@ predictEnsemble <- function(ensemble, test_data, ...){
                                           ensemble$model_list,
                                           test_data,
                                           ensemble$trueClasses)
+
   pred <- rep(NA,nrow(test_data))
   for(i in 1:nrow(test_data)){
     combination_class_results <- rep(NA,K)

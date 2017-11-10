@@ -77,13 +77,13 @@ make_model_list <- function(model_types, data, ...){
 #' @return \code{preds}
 make_preds <- function(data, model_list, true_classes){
   preds <- as.data.frame(matrix(0, ncol = length(model_list), nrow = dim(data)[1]))
-  names <- c()
+  name_vec <- c()
   # need to generate cross validated predictions
   for(m in 1:length(model_list)){
     preds[,m] <- cv_preds(names(model_list)[m], data, true_classes, cv_k=min(c(10,nrow(data))))
-    names <- c(names, paste("preds", m, sep = ""))
+    name_vec <- c(name_vec, paste("preds", m, sep = ""))
   }
-  colnames(preds) <- names
+  colnames(preds) <- name_vec
   row.names(preds) <- row.names(data)
   return(preds)
 }
@@ -99,7 +99,7 @@ make_preds <- function(data, model_list, true_classes){
 #' @return \code{preds}
 cv_preds <- function(model_type, dat, true_classes, cv_k=10){
   n <- nrow(dat)
-  pred_classes <- factor(rep(NULL,n), levels = true_classes)
+  pred_classes <- factor(rep(NA,n), levels = true_classes)
   cv_index <- cv_cohorts(nrow(dat), cv_k)
   for(k in 1:cv_k){
     # generate train/test based on CV folds

@@ -1,7 +1,7 @@
 #' Standard rectangular 1d binning
 #'
 #' @description Standard rectangular 1d binning
-#' 
+#'
 rect_bin_1d <- function(xs, origin, width, output="data"){
   bin_bounds <- origin + width*(0:(ceiling(diff(range(xs))/width)))
   bin_centers <- origin + width*(1:( ceiling(diff(range(xs))/width)) - 0.5)
@@ -35,10 +35,10 @@ bin_1d_by_def <- function(new_data_vec, bin_definition){
 #' @param bin_features The features to bin on.  Must be two!
 #' @param bin_type The type of bin to use
 #' @param nbins The number of bins to use
-#' 
+#'
 #' @return nd standard binning definition
-#' @examples 
-#' bin_nd(data=iris, bin_features=c("Petal.Length","Petal.Width","Sepal.Width"), nbins=c(2,3,4), bin_type="quantile", output="bin_data") 
+#' @examples
+#' bin_nd(data=iris, bin_features=c("Petal.Length","Petal.Width","Sepal.Width"), nbins=c(2,3,4), bin_type="quantile", output="bin_data")
 #' bin_nd_def <- bin_nd(iris, c("Petal.Length","Petal.Width","Sepal.Width"),nbins=c(2,3,4), bin_type="standard", output="definition")
 #' bin_nd(iris, c("Petal.Length","Petal.Width","Sepal.Width"), c(2,3,4), bin_type="standard", output="both")
 bin_nd <- function(data, bin_features, nbins, bin_type="standard", output="definition"){
@@ -55,8 +55,9 @@ bin_nd <- function(data, bin_features, nbins, bin_type="standard", output="defin
       if(bin_type=="standard"){
         bin_data[,j] <- rect_bin_1d(xs, min(xs), diff(range(xs))/nbins[j], output="data")
         bin_def_j <- rect_bin_1d(xs, min(xs), diff(range(xs))/nbins[j], output="definition")
-      } 
+      }
       if(bin_type=="quantile"){
+        #!# add jitter here in future!!
         bin_data[,j] <- quant_bin_1d(xs, nbins[j], output="data")
         bin_def_j <- quant_bin_1d(xs, nbins[j], output="definition")
       }
@@ -88,7 +89,7 @@ bin_nd <- function(data, bin_features, nbins, bin_type="standard", output="defin
 #'
 #' @param new_data data being binned
 #' @param bin_nd_def binning definition based on the bin_nd function
-#' 
+#'
 #' @return
 bin_nd_by_def <- function(new_data, bin_nd_def){
   bin_data <- sapply(bin_nd_def$bin_features, function(x){

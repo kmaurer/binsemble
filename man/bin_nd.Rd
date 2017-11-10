@@ -23,7 +23,7 @@ nd standard binning definition
 From provided bin features, create multidimensional bin definition
 }
 \examples{
-bin_nd(data=iris, bin_features=c("Petal.Length","Petal.Width","Sepal.Width"), nbins=c(2,3,4), bin_type="quantile", output="bin_data") 
+bin_nd(data=iris, bin_features=c("Petal.Length","Petal.Width","Sepal.Width"), nbins=c(2,3,4), bin_type="quantile", output="bin_data")
 bin_nd_def <- bin_nd(iris, c("Petal.Length","Petal.Width","Sepal.Width"),nbins=c(2,3,4), bin_type="standard", output="definition")
 bin_nd(iris, c("Petal.Length","Petal.Width","Sepal.Width"), c(2,3,4), bin_type="standard", output="both")
 }
