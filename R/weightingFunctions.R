@@ -126,16 +126,19 @@ weighted <- function(train_data, M, n){
 #' @return matrix of bin weights
 #'
 #' @export
-bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_data, M, K){
-  #!# add rotation option here
-  # if(rotate==TRUE){
-  #   pca(train_data_preds)
-  #   training_data_preds <- rotate(training_data_preds)
-  #   test_data <- rotate(test_data)
-  #   rename(train_data_preds)<- c(pc1, pc2,...etc)
-  #   rename(test_data)<- c(pc1, pc2,...etc)
-  #   bin_features <- pc1, pc2,...etc
-  # }
+bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_data, M, K, rotate=FALSE){
+  # rotation before binning optional
+  if(rotate==TRUE){
+    p <- ncol(test_data)-1 #!# basing the number of columns on the test data may be unstable in future iterations, find "p" another way
+    xcols <- 1:p
+    train_pca <- prcomp(train_data_preds[,xcols])
+    phi_matrix <- train_pca$rotation
+    train_data_preds[,xcols] <- as.data.frame(as.matrix(train_data_preds[,xcols]) %*% phi_matrix)
+    test_data[,xcols] <- as.data.frame(as.matrix(test_data[,xcols]) %*% phi_matrix)
+    names(train_data_preds)[xcols] <- paste0("PC",1:p)
+    names(test_data)[xcols] <- paste0("PC",1:p)
+    bin_features <- paste0("PC",1:length(nbins))
+  }
   ## Start with creating bin definitions based on "training data" then bin "test data" with that definition
   if(bin_type %in% c("standard","quantile")){
     bin_train <- bin_nd(data=train_data_preds, bin_features=bin_features, nbins=nbins, bin_type=bin_type, output="both")

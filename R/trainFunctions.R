@@ -32,7 +32,8 @@ make_train_preds <- function(train_data,model_list,true_classes){
 #'
 #' @return A trained ensemble that can be used to predict new data points
 #' @export
-make_ensemble <- function(train_preds = NULL, model_list = NULL, weightType = NULL, comb_rule = NULL, bin_type = "standard", bin_features = NULL, nbins = NULL, knn_size=10){
+make_ensemble <- function(train_preds = NULL, model_list = NULL, weightType = NULL, comb_rule = NULL,
+                          bin_type = "standard", bin_features = NULL, nbins = NULL, knn_size=10, rotate=FALSE){
   true_classes <- levels(train_preds[,"true_class"])                      # vector of true class labels for reference
   ensemble <- list(weightType = weightType,
                    comb_rule = comb_rule,
@@ -42,8 +43,8 @@ make_ensemble <- function(train_preds = NULL, model_list = NULL, weightType = NU
                    trueClasses = true_classes,
                    trainPreds = train_preds,
                    model_list = model_list,
-                   knn_size=knn_size)
-
+                   knn_size=knn_size,
+                   rotate=rotate)
   return(ensemble)
 }
 

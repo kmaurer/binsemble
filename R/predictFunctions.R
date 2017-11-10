@@ -23,7 +23,7 @@ predictEnsemble <- function(ensemble, test_data, ...){
   }else if(ensemble$weightType %in% c("bin weighted","bin dictator") ){
     modelWeights <- bin_weighted(ensemble$bin_features, ensemble$bin_type,
                                  ensemble$nbins, ensemble$trainPreds,
-                                 test_data, M, K)
+                                 test_data, M, K, rotate=ensemble$rotate)
     if(ensemble$weightType == "bin dictator") modelWeights <- bin_dictator_weighted(modelWeights)
   }else if(ensemble$weightType == "knn"){
     modelWeights <- knn_weighted(train_data=ensemble$trainPreds, test_data=test_data, M=M, scale=TRUE, knn_size=ensemble$knn_size)

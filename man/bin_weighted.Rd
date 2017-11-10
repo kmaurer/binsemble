@@ -4,7 +4,8 @@
 \alias{bin_weighted}
 \title{Model weights for "weight_type == "bin weighted" VERSION 2}
 \usage{
-bin_weighted(bin_features, bin_type, nbins, train_data_preds, test_data, M, K)
+bin_weighted(bin_features, bin_type, nbins, train_data_preds, test_data, M, K,
+  rotate = FALSE)
 }
 \arguments{
 \item{bin_features}{Training data with predicted class columns from each model \code{1,...,M}}

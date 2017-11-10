@@ -6,7 +6,7 @@
 \usage{
 make_ensemble(train_preds = NULL, model_list = NULL, weightType = NULL,
   comb_rule = NULL, bin_type = "standard", bin_features = NULL,
-  nbins = NULL, knn_size = 10)
+  nbins = NULL, knn_size = 10, rotate = FALSE)
 }
 \arguments{
 \item{model_list}{A list of pre trained models (using the same data as \code{train})}
