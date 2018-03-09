@@ -130,13 +130,13 @@ bin_weighted <- function(bin_features, bin_type, nbins, train_data_preds, test_d
   # rotation before binning optional
   if(rotate==TRUE){
     p <- ncol(test_data)-1 #!# basing the number of columns on the test data may be unstable in future iterations, find "p" another way
-    xcols <- 1:p
+    xcols <- 1:p !# Danger in hard coded column positions, train_data_preds column order depends on original data
     train_pca <- prcomp(train_data_preds[,xcols])
     phi_matrix <- train_pca$rotation
     train_data_preds[,xcols] <- as.data.frame(as.matrix(train_data_preds[,xcols]) %*% phi_matrix)
     test_data[,xcols] <- as.data.frame(as.matrix(test_data[,xcols]) %*% phi_matrix)
-    names(train_data_preds)[xcols] <- paste0("PC",1:p)
-    names(test_data)[xcols] <- paste0("PC",1:p)
+    names(train_data_preds)[xcols] <- paste0("PC",1:p) #!#
+    names(test_data)[xcols] <- paste0("PC",1:p) #!#
     bin_features <- paste0("PC",1:length(nbins))
   }
   ## Start with creating bin definitions based on "training data" then bin "test data" with that definition
